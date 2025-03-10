@@ -183,9 +183,10 @@ fn print_feature_cfg(minor_version_required: u32, cfg: &str) {
 /// so this function is unstable.
 #[doc(hidden)]
 pub fn print_feature_cfgs() {
+    let triplet = impl_::target_triple_from_env();
+
     print_feature_cfg(70, "rustc_has_once_lock");
     print_feature_cfg(70, "cargo_toml_lints");
-    print_feature_cfg(71, "rustc_has_extern_c_unwind");
     print_feature_cfg(74, "invalid_from_utf8_lint");
     print_feature_cfg(79, "c_str_lit");
     // Actually this is available on 1.78, but we should avoid
@@ -193,6 +194,10 @@ pub fn print_feature_cfgs() {
     print_feature_cfg(79, "diagnostic_namespace");
     print_feature_cfg(83, "io_error_more");
     print_feature_cfg(85, "fn_ptr_eq");
+
+    if matches!(triplet.operating_system, OperatingSystem::Linux) {
+        print_feature_cfg(71, "rustc_has_extern_c_unwind");
+    }
 }
 
 /// Registers `pyo3`s config names as reachable cfg expressions
